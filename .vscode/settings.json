@@ -1,0 +1,8 @@
+{
+    "problems.excludePatterns": [
+      "**/inspiration/**"
+    ],
+    "i18n-ally.localesPaths": [
+      "src/locales"
+    ]
+  }
