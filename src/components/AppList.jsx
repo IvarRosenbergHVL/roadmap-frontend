@@ -1,10 +1,11 @@
+import React, { useState } from "react";
 import { useGetAppsQuery } from "../services/api";
 import { Spinner, Alert, Button } from "@digdir/designsystemet-react";
-import { useState } from "react";
 import FeatureList from "./FeatureList";
 
 export default function AppList() {
   const { data: apps, isLoading, isError } = useGetAppsQuery();
+  console.log("Apps fra backend:", apps);
   const [selectedAppId, setSelectedAppId] = useState(null);
 
   if (isLoading) return <Spinner title="Laster apper..." />;
@@ -20,6 +21,7 @@ export default function AppList() {
         ))}
       </ul>
       <FeatureList appId={selectedAppId} />
+      <RoadmapView appId={selectedAppId} />
     </>
   );
 }
