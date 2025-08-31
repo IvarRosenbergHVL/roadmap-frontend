@@ -9,11 +9,7 @@ import "./app/i18n";
 import "./styles/global-overrides.css";
 import "./styles/global-overrides.css";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <LanguageSelector />
-    <AppRouter />
-  </Provider>
+import { useTranslation } from "react-i18next";
 
 function LanguageSelector() {
   const langs = [
@@ -23,13 +19,35 @@ function LanguageSelector() {
     { code: "de", label: "Deutsch" },
     { code: "es", label: "Español" }
   ];
-  const { i18n } = require("react-i18next");
+  const { i18n } = useTranslation();
+
+  // On mount, set language from localStorage if present
+  React.useEffect(() => {
+    const savedLang = localStorage.getItem("lang");
+    if (savedLang && savedLang !== i18n.language) {
+      i18n.changeLanguage(savedLang);
+    }
+  }, [i18n]);
+
+  const handleChange = (e) => {
+    const lang = e.target.value;
+    i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
+  };
+
   return (
     <div style={{ position: "absolute", top: 12, right: 18, zIndex: 99 }}>
-      <select value={i18n.language} onChange={e => i18n.changeLanguage(e.target.value)} style={{ padding: 4 }}>
+      <select value={i18n.language} onChange={handleChange} style={{ padding: 4 }}>
         {langs.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
       </select>
     </div>
   );
 }
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <LanguageSelector />
+    <AppRouter />
+  </Provider>
 );
+// End of file

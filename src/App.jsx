@@ -1,11 +1,12 @@
 
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import AppList from "./components/AppList";
 import NewAppForm from "./components/NewAppForm";
-
 export default function App() {
   const [selectedAppId, setSelectedAppId] = useState(null);
+  const { t } = useTranslation();
   return (
     <main style={{
       minHeight: "100vh",
@@ -28,13 +29,13 @@ export default function App() {
           fontWeight: 700,
           marginBottom: "0.5rem",
           color: "var(--ds-color-text-default)"
-        }}>Roadmap</h1>
+        }}>{t("frontpage.title")}</h1>
         <p style={{
           fontSize: "1.15rem",
           color: "var(--ds-color-text-subtle)",
           marginBottom: "2rem"
         }}>
-          Se status og funksjonsønsker for alle apper. Velg en app for å se detaljer og bidra med nye forslag!
+          {t("frontpage.description")}
         </p>
       <NewAppForm onAppCreated={appId => setSelectedAppId(appId)} />
       <AppList selectedAppId={selectedAppId} setSelectedAppId={setSelectedAppId} />
@@ -42,3 +43,4 @@ export default function App() {
     </main>
   );
 }
+

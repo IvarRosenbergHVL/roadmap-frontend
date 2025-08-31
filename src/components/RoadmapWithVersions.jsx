@@ -4,8 +4,10 @@ import { useDeleteFeatureMutation, useUpdateFeatureMutation } from "../services/
 import NewFeatureForm from "./NewFeatureForm";
 import { Spinner, Alert, Tag, Select } from "@digdir/designsystemet-react";
 import { Button } from "@digdir/designsystemet-react";
+import { useTranslation } from "react-i18next";
 
 export default function RoadmapWithVersions({ appId, statusId }) {
+  const { t } = useTranslation();
   const [showNewForm, setShowNewForm] = React.useState(false);
   const [editFeature, setEditFeature] = React.useState(null);
   // Alle hooks skal kalles først!
@@ -20,15 +22,15 @@ export default function RoadmapWithVersions({ appId, statusId }) {
   const [editError, setEditError] = React.useState("");
 
   // Tidlig return etter hooks
-  if (loadingStatuses || isLoading) return <Spinner title="Laster roadmap..." />;
-  if (errorStatuses || isError) return <Alert severity="danger">Kunne ikke laste roadmap</Alert>;
+  if (loadingStatuses || isLoading) return <Spinner title={t("roadmap.loading")} />;
+  if (errorStatuses || isError) return <Alert severity="danger">{t("roadmap.loaderror")}</Alert>;
   if (!statuses || !features) return null;
 
   // Hvis statusId er satt, vis kun den statusen og dens features
   let grouped;
   if (statusId) {
     const status = statuses.find((s) => String(s.id) === String(statusId));
-    if (!status) return <Alert severity="warning">Fant ikke valgt versjon/status</Alert>;
+    if (!status) return <Alert severity="warning">{t("roadmap.statusNotFound")}</Alert>;
     grouped = [{
       ...status,
       features: features.filter((f) => String(f.status_id) === String(statusId)),
@@ -41,29 +43,29 @@ export default function RoadmapWithVersions({ appId, statusId }) {
   }
 
   const startEdit = (f) => {
-  setEditFeature(f);
-  setShowNewForm(false);
-  setEditError("");
+    setEditFeature(f);
+    setShowNewForm(false);
+    setEditError("");
   };
   const cancelEdit = () => {
-  setEditFeature(null);
-  setEditError("");
+    setEditFeature(null);
+    setEditError("");
   };
   const saveEdit = async (f) => {
     try {
       await updateFeature({ id: f.id, title: editTitle, description: editDescription }).unwrap();
       cancelEdit();
     } catch (err) {
-      setEditError("Kunne ikke oppdatere funksjon.");
+      setEditError(t("roadmap.updateError"));
     }
   };
 
   return (
     <div>
-      <h2>Roadmap</h2>
+      <h2>{t("Roadmap")}</h2>
       <div style={{ marginBottom: 18 }}>
         <Button size="small" variant="primary" onClick={() => setShowNewForm(true)}>
-          Ny funksjon
+          {t("Ny funksjon")}
         </Button>
       </div>
       {/* Skjema for ny feature vises kun hvis showNewForm=true */}
@@ -111,17 +113,17 @@ export default function RoadmapWithVersions({ appId, statusId }) {
                       <>
                         <strong>{f.title}</strong> — {f.description}
                         <Select
-                          label="Flytt til versjon"
+                          label={t("roadmap.moveToVersion")}
                           value={f.status_id}
                           onChange={e => updateFeatureStatus({ id: f.id, status_id: e.target.value })}
                           options={statuses.map((s) => ({ value: s.id, label: s.label }))}
                           style={{ marginLeft: "1rem", width: 110, minWidth: 0, maxWidth: 120, fontSize: "0.95rem", padding: "2px 6px" }}
                         />
                         <Button size="small" variant="secondary" style={{ marginLeft: 8 }} onClick={() => startEdit(f)}>
-                          Rediger
+                          {t("Rediger funksjon")}
                         </Button>
                         <Button size="small" variant="danger" style={{ marginLeft: 4 }} onClick={() => deleteFeature(f.id)}>
-                          Slett
+                          {t("Slett")}
                         </Button>
                       </>
                     )}
@@ -134,17 +136,17 @@ export default function RoadmapWithVersions({ appId, statusId }) {
                       <li key={sf.id} style={{ marginBottom: "0.5rem", display: "flex", alignItems: "center", background: "#f7f7fa", borderRadius: 6, padding: "8px 12px", marginLeft: 32 }}>
                         <strong>{sf.title}</strong> — {sf.description}
                         <Select
-                          label="Flytt til versjon"
+                          label={t("roadmap.moveToVersion")}
                           value={sf.status_id}
                           onChange={e => updateFeatureStatus({ id: sf.id, status_id: e.target.value })}
                           options={statuses.map((s) => ({ value: s.id, label: s.label }))}
                           style={{ marginLeft: "1rem", width: 110, minWidth: 0, maxWidth: 120, fontSize: "0.95rem", padding: "2px 6px" }}
                         />
                         <Button size="small" variant="secondary" style={{ marginLeft: 8 }} onClick={() => startEdit(sf)}>
-                          Rediger
+                          {t("Rediger funksjon")}
                         </Button>
                         <Button size="small" variant="danger" style={{ marginLeft: 4 }} onClick={() => deleteFeature(sf.id)}>
-                          Slett
+                          {t("Slett")}
                         </Button>
                       </li>
                     ))}

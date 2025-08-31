@@ -4,8 +4,8 @@ import { useGetFeaturesQuery, useAddFeatureMutation } from "../services/api";
 
 function SubFeatureList({ parentId }) {
   const { data: subFeatures, isLoading, isError } = useGetFeaturesQuery({ parent_id: parentId });
-  if (isLoading) return <Spinner title="Laster sub-features..." />;
-  if (isError) return <Alert severity="danger">Kunne ikke laste sub-features</Alert>;
+  if (isLoading) return <Spinner title={t("roadmaphierarchy.loadingSubfeatures")} />;
+  if (isError) return <Alert severity="danger">{t("roadmaphierarchy.loadSubfeaturesError")}</Alert>;
   if (!subFeatures || subFeatures.length === 0) return null;
   return (
     <ul style={{ marginLeft: 24 }}>
@@ -25,8 +25,9 @@ export default function RoadmapWithHierarchy({ appId, statusId }) {
   const [newSubTitle, setNewSubTitle] = useState("");
   const [parentFeatureId, setParentFeatureId] = useState(null);
 
-  if (isLoading) return <Spinner title="Laster roadmap..." />;
-  if (isError) return <Alert severity="danger">Kunne ikke laste roadmap</Alert>;
+  const { t } = useTranslation();
+  if (isLoading) return <Spinner title={t("roadmaphierarchy.loading")} />;
+  if (isError) return <Alert severity="danger">{t("roadmaphierarchy.loaderror")}</Alert>;
   if (!features) return null;
 
   // Filtrer hoved-features (parent_id == null)
@@ -34,14 +35,14 @@ export default function RoadmapWithHierarchy({ appId, statusId }) {
 
   return (
     <div>
-      <h2>Roadmap med hierarki</h2>
+  <h2>{t("roadmaphierarchy.title")}</h2>
       <ul>
         {mainFeatures.map(f => (
           <li key={f.id} style={{ marginBottom: "1.5rem" }}>
             <Tag>{f.title}</Tag> — {f.description}
             <SubFeatureList parentId={f.id} />
             <Button size="small" style={{ marginLeft: 8 }} onClick={() => setParentFeatureId(f.id)}>
-              Legg til sub-feature
+              {t("roadmaphierarchy.addsub")}
             </Button>
             {parentFeatureId === f.id && (
               <form
@@ -57,11 +58,11 @@ export default function RoadmapWithHierarchy({ appId, statusId }) {
                   type="text"
                   value={newSubTitle}
                   onChange={e => setNewSubTitle(e.target.value)}
-                  placeholder="Tittel på sub-feature"
+                  placeholder={t("roadmaphierarchy.subplaceholder")}
                   required
                   style={{ marginRight: 8 }}
                 />
-                <Button type="submit" size="small">Opprett</Button>
+                <Button type="submit" size="small">{t("roadmaphierarchy.createSubfeature")}</Button>
                 <Button type="button" size="small" variant="secondary" onClick={() => setParentFeatureId(null)}>
                   Avbryt
                 </Button>

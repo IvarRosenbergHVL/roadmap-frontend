@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useGetStatusesQuery, useAddStatusMutation, useUpdateStatusMutation, useDeleteStatusMutation } from "../services/api";
 import { Spinner, Alert, Button, Textfield, Tag } from "@digdir/designsystemet-react";
 
 export default function VersionAdmin({ appId }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
   const { data: statuses, isLoading, isError } = useGetStatusesQuery(appId);
@@ -39,13 +41,13 @@ export default function VersionAdmin({ appId }) {
   }
   const nextVersion = getNextVersion(newType);
 
-  if (isLoading) return <Spinner title="Laster versjoner..." />;
-  if (isError) return <Alert severity="danger">Kunne ikke laste versjoner/statuser</Alert>;
+  if (isLoading) return <Spinner title={t("versionadmin.loading")} />;
+  if (isError) return <Alert severity="danger">{t("versionadmin.loaderror")}</Alert>;
 
   return (
     <div className="version-admin-layout">
       <div className="version-form">
-        <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "1.2rem", color: "#222" }}>Opprett ny versjon/status</h3>
+        <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "1.2rem", color: "#222" }}>{t("versionadmin.newversion")}</h3>
         <form onSubmit={async e => {
         e.preventDefault();
         setErrorMsg("");
@@ -82,31 +84,48 @@ export default function VersionAdmin({ appId }) {
             navigate(`/app/${appId}/features?status_id=${result.id}`);
           }
         } catch (err) {
-          setErrorMsg("Kunne ikke opprette versjon. Sjekk at alle felter er fylt ut riktig og prøv igjen.");
+          setErrorMsg(t("versionadmin.createerror"));
         }
       }} style={{ marginTop: "2rem" }}>
         {errorMsg && <Alert severity="danger">{errorMsg}</Alert>}
         <label style={{ marginRight: 8 }}>
-          Type versjon:
+          {t("versionadmin.type")}
           <select value={newType} onChange={e => setNewType(e.target.value)} style={{ marginLeft: 8 }}>
-            <option value="MAJOR">MAJOR</option>
-            <option value="MINOR">MINOR</option>
-            <option value="PATCH">PATCH</option>
+            <option value="MAJOR">{t("versionadmin.major")}</option>
+            <option value="MINOR">{t("versionadmin.minor")}</option>
+            <option value="PATCH">{t("versionadmin.patch")}</option>
           </select>
         </label>
-        <Textfield label="Neste versjon (SemVer)" value={nextVersion} readOnly style={{ width: 120, marginLeft: 8 }} />
-        <Textfield label="Tittel" value={newTitle} onChange={e => setNewTitle(e.target.value)} required style={{ marginLeft: 8, width: 180 }} />
-        <Textfield label="Beskrivelse" value={newDescription} onChange={e => setNewDescription(e.target.value)} multiline required style={{ marginLeft: 8, width: 240 }} />
-        <Textfield label="Release-dato" type="datetime-local" value={newReleasedAt} onChange={e => setNewReleasedAt(e.target.value)} required style={{ marginLeft: 8, width: 200 }} />
+        <Textfield label={t("versionadmin.nextversion")} value={nextVersion} readOnly style={{ width: 120, marginLeft: 8 }} />
+        <Textfield label={t("versionadmin.title")}
+          value={newTitle}
+          onChange={e => setNewTitle(e.target.value)}
+          required
+          style={{ marginLeft: 8, width: 180 }}
+        />
+        <Textfield label={t("versionadmin.description")}
+          value={newDescription}
+          onChange={e => setNewDescription(e.target.value)}
+          multiline
+          required
+          style={{ marginLeft: 8, width: 240 }}
+        />
+        <Textfield label={t("versionadmin.releasedate")}
+          type="datetime-local"
+          value={newReleasedAt}
+          onChange={e => setNewReleasedAt(e.target.value)}
+          required
+          style={{ marginLeft: 8, width: 200 }}
+        />
         <label style={{ marginLeft: 8 }}>
-          <input type="checkbox" checked={newTerminal} onChange={e => setNewTerminal(e.target.checked)} /> Terminal (lansert)
+          <input type="checkbox" checked={newTerminal} onChange={e => setNewTerminal(e.target.checked)} /> {t("versionadmin.terminal")}
         </label>
-        <Button type="submit" style={{ marginLeft: 8 }}>Opprett</Button>
+        <Button type="submit" style={{ marginLeft: 8 }}>{t("versionadmin.create")}</Button>
         </form>
       </div>
       <div className="version-card">
         <div className="version-card-inner">
-          <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>Versjoner/statuser</h4>
+          <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>{t("versionadmin.listtitle")}</h4>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {statuses?.map((status) => (
               <li key={status.id} style={{ marginBottom: "0.7rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -115,8 +134,8 @@ export default function VersionAdmin({ appId }) {
                   <span style={{ marginLeft: 8, fontSize: "0.97em", color: "#666" }}>{status.title}</span>
                 </span>
                 <span>
-                  <Button size="xsmall" variant="tertiary" onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>Funksjoner</Button>
-                  <Button size="xsmall" variant="danger" onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>Slett</Button>
+                  <Button size="xsmall" variant="tertiary" onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.featuresbtn")}</Button>
+                  <Button size="xsmall" variant="danger" onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>{t("versionadmin.deletebtn")}</Button>
                 </span>
               </li>
             ))}
