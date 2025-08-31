@@ -15,8 +15,7 @@ export default function AppSetupPage() {
           <button>Admin for appen</button>
         </Link>
       </div>
-      <RoadmapView appId={appId} />
-      <FeatureList appId={appId} />
+  <RoadmapView appId={appId} />
     </div>
   );
 }

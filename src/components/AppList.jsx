@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AppList(props) {
   const { data: apps, isLoading, isError } = useGetAppsQuery();
-  console.log("Apps fra backend:", apps);
+  if (apps) console.log("Apps fra backend:", apps);
   const { selectedAppId, setSelectedAppId } = props;
   const navigate = useNavigate();
 
@@ -33,9 +33,7 @@ export default function AppList(props) {
           </li>
         ))}
       </ul>
-  {selectedAppId && <FeatureList appId={selectedAppId} />}
-  {selectedAppId && <RoadmapView appId={selectedAppId} />}
-  {selectedAppId && <NewFeatureForm appId={selectedAppId} />}
+      {/* Fjern dobbel visning av roadmap/features i oversikten. Disse vises kun på app-siden. */}
     </>
   );
 }

@@ -1,6 +1,4 @@
-
-
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+    import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   reducerPath: "api",
@@ -40,12 +38,20 @@ export const api = createApi({
       query: (body) => ({ url: "/comments", method: "POST", body }),
       invalidatesTags: ["Comment"],
     }),
+    updateFeature: builder.mutation({
+      query: ({ id, ...body }) => ({ url: `/features/${id}`, method: "PATCH", body }),
+      invalidatesTags: ["Feature"],
+    }),
     updateFeatureStatus: builder.mutation({
       query: ({ id, status_id }) => ({
         url: `/features/${id}/status`,
         method: "PATCH",
         body: { status_id },
       }),
+      invalidatesTags: ["Feature"],
+    }),
+    deleteFeature: builder.mutation({
+      query: (id) => ({ url: `/features/${id}`, method: "DELETE" }),
       invalidatesTags: ["Feature"],
     }),
     getBackendVersion: builder.query({
@@ -65,6 +71,8 @@ export const {
   useAddStatusMutation,
   useUpdateStatusMutation,
   useDeleteStatusMutation,
+  useDeleteFeatureMutation,
+  useUpdateFeatureMutation,
   usePromoteFeatureRequestMutation,
   useGetBackendVersionQuery,
 } = api;

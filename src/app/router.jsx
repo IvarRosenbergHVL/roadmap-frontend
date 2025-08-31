@@ -4,6 +4,8 @@ import App from "../App";
 import AppSetupPage from "../pages/AppSetupPage";
 import AppAdminPage from "../pages/AppAdminPage";
 
+import AppFeaturesPage from "../pages/AppFeaturesPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/app/:appId/admin",
     element: <AppAdminPage />,
+  },
+  {
+    path: "/app/:appId/features",
+    element: <AppFeaturesPage />,
   },
 ]);
 
