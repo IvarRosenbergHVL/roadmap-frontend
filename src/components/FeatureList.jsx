@@ -1,3 +1,4 @@
+import React from "react";
 import { useGetFeaturesQuery } from "../services/api";
 import { Spinner, Alert } from "@digdir/designsystemet-react";
 

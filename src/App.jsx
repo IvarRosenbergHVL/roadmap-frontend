@@ -1,9 +1,11 @@
 
 
-import React from "react";
+import React, { useState } from "react";
 import AppList from "./components/AppList";
+import NewAppForm from "./components/NewAppForm";
 
 export default function App() {
+  const [selectedAppId, setSelectedAppId] = useState(null);
   return (
     <main style={{
       minHeight: "100vh",
@@ -34,7 +36,8 @@ export default function App() {
         }}>
           Se status og funksjonsønsker for alle apper. Velg en app for å se detaljer og bidra med nye forslag!
         </p>
-        <AppList />
+      <NewAppForm onAppCreated={appId => setSelectedAppId(appId)} />
+      <AppList selectedAppId={selectedAppId} setSelectedAppId={setSelectedAppId} />
       </div>
     </main>
   );
