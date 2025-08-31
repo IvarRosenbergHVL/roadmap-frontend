@@ -14,9 +14,14 @@ export default function AppSetupPage() {
   <Breadcrumbs />
   <h2>{t("appsetup.title")}</h2>
   <p>{t("appsetup.description")}</p>
-      <div style={{ marginBottom: "1.5rem" }}>
-        <Link to={`/app/${appId}/admin`} style={{ float: "right", marginLeft: "1rem", textDecoration: "none" }}>
+      <div style={{ marginBottom: "1.5rem", display: "flex", gap: "1rem" }}>
+        <Link to={`/app/${appId}/admin`} style={{ textDecoration: "none" }}>
           <button>{t("appsetup.adminbtn")}</button>
+        </Link>
+        <Link to={`/app/${appId}/user-requests-v2`} style={{ textDecoration: "none" }}>
+          <button style={{ background: "#6e4ad2", color: "#fff", border: "none", borderRadius: 6, padding: "8px 18px", fontSize: 16 }}>
+            {t("appfeatures.userRequestsLink")}
+          </button>
         </Link>
       </div>
       <RoadmapView appId={appId} />

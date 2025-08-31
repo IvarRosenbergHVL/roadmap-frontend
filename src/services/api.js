@@ -3,8 +3,38 @@
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/v1" }),
-  tagTypes: ["App", "Feature", "Status", "Vote", "Comment"],
+  tagTypes: ["App", "Feature", "Status", "Vote", "Comment", "UserRequest", "UserRequestComment"],
   endpoints: (builder) => ({
+    // User Requests
+    getUserRequests: builder.query({
+      query: (appId) => `/user-requests?app_id=${appId}`,
+      providesTags: ["UserRequest"],
+    }),
+    addUserRequest: builder.mutation({
+      query: (body) => ({ url: "/user-requests", method: "POST", body }),
+      invalidatesTags: ["UserRequest"],
+    }),
+    voteUserRequest: builder.mutation({
+      query: (id) => ({ url: `/user-requests/${id}/vote`, method: "POST" }),
+      invalidatesTags: ["UserRequest"],
+    }),
+    updateUserRequestStatus: builder.mutation({
+      query: ({ id, status }) => ({ url: `/user-requests/${id}/status`, method: "PATCH", body: { status } }),
+      invalidatesTags: ["UserRequest"],
+    }),
+    promoteUserRequest: builder.mutation({
+      query: (id) => ({ url: `/user-requests/${id}/promote`, method: "PATCH" }),
+      invalidatesTags: ["UserRequest", "Feature"],
+    }),
+    // User Request Comments
+    getUserRequestComments: builder.query({
+      query: (requestId) => `/user-requests/${requestId}/comments`,
+      providesTags: ["UserRequestComment"],
+    }),
+    addUserRequestComment: builder.mutation({
+      query: ({ request_id, text }) => ({ url: `/user-requests/${request_id}/comments`, method: "POST", body: { text } }),
+      invalidatesTags: ["UserRequestComment"],
+    }),
     getApps: builder.query({ query: () => "/apps", providesTags: ["App"] }),
     addApp: builder.mutation({
       query: (body) => ({ url: "/apps", method: "POST", body }),
@@ -75,4 +105,9 @@ export const {
   useUpdateFeatureMutation,
   usePromoteFeatureRequestMutation,
   useGetBackendVersionQuery,
+  useGetUserRequestCommentsQuery,
+  useAddUserRequestCommentMutation,
+  useGetUserRequestsQuery,
+  useVoteUserRequestMutation,
+  useAddUserRequestMutation,
 } = api;

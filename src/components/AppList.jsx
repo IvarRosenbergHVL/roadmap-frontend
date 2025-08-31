@@ -16,25 +16,29 @@ export default function AppList(props) {
 
   if (isLoading) return <Spinner title={t("applist.loading")} />;
   if (isError) return <Alert severity="danger">{t("applist.loaderror")}</Alert>;
+  if (!apps) return <Alert severity="danger">Ingen data fra backend. Sjekk at API kjører og at /apps returnerer en liste.</Alert>;
 
   return (
     <>
       <ul>
-        {apps?.map((app) => (
-          <li key={app.id}>
-            <Button
-              onClick={() => {
-                setSelectedAppId(app.id);
-                navigate(`/app/${app.id}`);
-              }}
-              variant={app.id === selectedAppId ? "primary" : "secondary"}
-            >
-              {app.name}
-            </Button>
-          </li>
-        ))}
+        {apps.length === 0 ? (
+          <li><Alert severity="info">Ingen apper funnet. Legg til en ny app!</Alert></li>
+        ) : (
+          apps.map((app) => (
+            <li key={app.id}>
+              <Button
+                onClick={() => {
+                  setSelectedAppId(app.id);
+                  navigate(`/app/${app.id}`);
+                }}
+                variant={app.id === selectedAppId ? "primary" : "secondary"}
+              >
+                {app.name}
+              </Button>
+            </li>
+          ))
+        )}
       </ul>
-      {/* Fjern dobbel visning av roadmap/features i oversikten. Disse vises kun på app-siden. */}
     </>
   );
 }
