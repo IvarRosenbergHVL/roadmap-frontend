@@ -11,7 +11,7 @@ function AppAdminPage() {
   const { appId } = useParams();
   const { data: backendVersion, isLoading: loadingVersion } = useGetBackendVersionQuery();
   return (
-    <div style={{ maxWidth: 700, margin: "2rem auto", padding: "2rem", background: "var(--ds-color-surface-default)", borderRadius: "1rem" }}>
+  <div className="main-container">
       <h2>Admin for appen</h2>
       <div style={{ fontSize: "0.95rem", color: "var(--ds-color-text-subtle)", marginBottom: "0.5rem" }}>
         Backend-versjon: {loadingVersion ? "Laster..." : backendVersion?.version || "Ukjent"}

@@ -5,6 +5,7 @@ import { store } from "./app/store";
 import AppRouter from "./app/router";
 import "@digdir/designsystemet-css/index.css";
 import "@digdir/designsystemet-theme";
+import "./styles/global-overrides.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

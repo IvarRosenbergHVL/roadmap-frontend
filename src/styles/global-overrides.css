@@ -1,0 +1,59 @@
+.version-admin-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.version-form {
+  flex: 1 1 340px;
+  min-width: 320px;
+}
+
+.version-card {
+  flex: 0 0 290px;
+  min-width: 260px;
+  max-width: 320px;
+  margin-top: 0.5rem;
+}
+
+.version-card-inner {
+  background: var(--ds-color-surface-subtle);
+  border: 1px solid var(--ds-color-border-subtle);
+  border-radius: 0.85rem;
+  padding: 1.1rem 1.2rem 1rem 1.2rem;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+}
+body {
+  font-size: 15px;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--ds-color-surface-default);
+  margin: 0;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  background: var(--ds-color-surface-default);
+  border-radius: 1rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .main-container {
+    padding: 2.5rem 2rem;
+    max-width: 1100px;
+  }
+}
+
+.ds-tabs-bar {
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.ds-input,
+.ds-select {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.97em;
+}

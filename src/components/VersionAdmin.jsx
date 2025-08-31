@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useGetStatusesQuery, useAddStatusMutation, useUpdateStatusMutation, useDeleteStatusMutation } from "../services/api";
 import { Spinner, Alert, Button, Textfield, Tag } from "@digdir/designsystemet-react";
 
 export default function VersionAdmin({ appId }) {
+  const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
   const { data: statuses, isLoading, isError } = useGetStatusesQuery(appId);
   const [addStatus] = useAddStatusMutation();
@@ -41,36 +43,44 @@ export default function VersionAdmin({ appId }) {
   if (isError) return <Alert severity="danger">Kunne ikke laste versjoner/statuser</Alert>;
 
   return (
-    <div>
-      <h3>Versjoner/statuser</h3>
-      <ul>
-        {statuses?.map((status) => (
-          <li key={status.id} style={{ marginBottom: "1rem" }}>
-            <Tag variant={status.terminal ? "success" : "info"}>{status.label}</Tag>
-            <Button size="small" style={{ marginLeft: 8 }} onClick={() => deleteStatus(status.id)}>Slett</Button>
-            {/* Her kan du legge til redigeringsfunksjon for label/sort_index/terminal */}
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={async e => {
+    <div className="version-admin-layout">
+      <div className="version-form">
+        <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "1.2rem", color: "#222" }}>Opprett ny versjon/status</h3>
+        <form onSubmit={async e => {
         e.preventDefault();
         setErrorMsg("");
+        // Konverter released_at til gyldig ISO-format med klokkeslett
+        let releasedAtIso = "";
+        if (newReleasedAt) {
+          // Hvis input er fra type="datetime-local", er formatet "YYYY-MM-DDTHH:MM"
+          // Konverter til "YYYY-MM-DD HH:MM:SS" for MSSQL
+          if (newReleasedAt.length === 16 && newReleasedAt.includes("T")) {
+            releasedAtIso = newReleasedAt.replace("T", " ") + ":00";
+          } else {
+            releasedAtIso = newReleasedAt;
+          }
+        }
         const payload = {
           app_id: Number(appId),
           label: nextVersion,
+          code: nextVersion, // eller generer annen unik kode
           title: newTitle,
           description: newDescription,
-          released_at: newReleasedAt,
+          released_at: releasedAtIso,
           sort_index: statuses.length + 1,
           terminal: newTerminal
         };
         try {
-          await addStatus(payload).unwrap();
+          const result = await addStatus(payload).unwrap();
           setNewType("MINOR");
           setNewTerminal(false);
           setNewTitle("");
           setNewDescription("");
           setNewReleasedAt("");
+          // Naviger automatisk til features for denne versjonen
+          if (result?.id) {
+            navigate(`/app/${appId}/features?status_id=${result.id}`);
+          }
         } catch (err) {
           setErrorMsg("Kunne ikke opprette versjon. Sjekk at alle felter er fylt ut riktig og prøv igjen.");
         }
@@ -92,7 +102,27 @@ export default function VersionAdmin({ appId }) {
           <input type="checkbox" checked={newTerminal} onChange={e => setNewTerminal(e.target.checked)} /> Terminal (lansert)
         </label>
         <Button type="submit" style={{ marginLeft: 8 }}>Opprett</Button>
-      </form>
+        </form>
+      </div>
+      <div className="version-card">
+        <div className="version-card-inner">
+          <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>Versjoner/statuser</h4>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {statuses?.map((status) => (
+              <li key={status.id} style={{ marginBottom: "0.7rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span>
+                  <Tag variant={status.terminal ? "success" : "info"} style={{ fontSize: "0.95em", padding: "0.2em 0.7em" }}>{status.label}</Tag>
+                  <span style={{ marginLeft: 8, fontSize: "0.97em", color: "#666" }}>{status.title}</span>
+                </span>
+                <span>
+                  <Button size="xsmall" variant="tertiary" onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>Funksjoner</Button>
+                  <Button size="xsmall" variant="danger" onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>Slett</Button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
