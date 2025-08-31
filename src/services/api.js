@@ -48,6 +48,9 @@ export const api = createApi({
       }),
       invalidatesTags: ["Feature"],
     }),
+    getBackendVersion: builder.query({
+      query: () => "/version",
+    }),
   }),
 });
 
@@ -63,4 +66,5 @@ export const {
   useUpdateStatusMutation,
   useDeleteStatusMutation,
   usePromoteFeatureRequestMutation,
+  useGetBackendVersionQuery,
 } = api;
