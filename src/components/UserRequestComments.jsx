@@ -7,6 +7,7 @@ export default function UserRequestComments({ requestId }) {
   const { t } = useTranslation();
   const { data: comments, isLoading, isError } = useGetUserRequestCommentsQuery(requestId);
   const [addComment, { isLoading: isAdding }] = useAddUserRequestCommentMutation();
+  const [author, setAuthor] = useState("");
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -19,9 +20,11 @@ export default function UserRequestComments({ requestId }) {
       setError(t("comments.empty"));
       return;
     }
+    const authorValue = author.trim() ? author : "Anonym";
     try {
-      await addComment({ request_id: requestId, text }).unwrap();
+      await addComment({ request_id: requestId, author: authorValue, text }).unwrap();
       setText("");
+      setAuthor("");
       setSuccess(true);
     } catch (err) {
       setError(t("comments.error"));
@@ -45,12 +48,18 @@ export default function UserRequestComments({ requestId }) {
       </ul>
       <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
         <Textfield
-          label={t("comments.add")}
+          label={t("comments.add") + " (navn)"}
+          value={author}
+          onChange={e => setAuthor(e.target.value)}
+          disabled={isAdding}
+        />
+        <Textfield
+          label={t("comments.add") + " (tekst)"}
           value={text}
           onChange={e => setText(e.target.value)}
           disabled={isAdding}
         />
-        <Button type="submit" disabled={isAdding || !text.trim()} style={{ marginTop: 8 }}>{t("comments.submit")}</Button>
+  <Button type="submit" disabled={isAdding || !text.trim()} style={{ marginTop: 8 }}>{t("comments.submit")}</Button>
       </form>
       {error && <Alert severity="danger" style={{ marginTop: 8 }}>{error}</Alert>}
       {success && <Alert severity="success" style={{ marginTop: 8 }}>{t("comments.success")}</Alert>}

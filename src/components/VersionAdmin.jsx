@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useGetStatusesQuery, useAddStatusMutation, useUpdateStatusMutation, useDeleteStatusMutation } from "../services/api";
-import { Spinner, Alert, Button, Textfield, Tag } from "@digdir/designsystemet-react";
+import { Spinner, Alert, Button, Textfield, Tag, Select, Checkbox, Card } from "@digdir/designsystemet-react";
+import { TrashIcon, InformationIcon, PlusIcon, PencilIcon } from "@navikt/aksel-icons";
 
 export default function VersionAdmin({ appId }) {
   const { t } = useTranslation();
@@ -45,86 +46,86 @@ export default function VersionAdmin({ appId }) {
   if (isError) return <Alert severity="danger">{t("versionadmin.loaderror")}</Alert>;
 
   return (
-    <div className="version-admin-layout">
+    <Card shadow style={{ padding: "2rem", marginBottom: "2rem" }}>
       <div className="version-form">
         <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "1.2rem", color: "#222" }}>{t("versionadmin.newversion")}</h3>
         <form onSubmit={async e => {
-        e.preventDefault();
-        setErrorMsg("");
-        // Konverter released_at til gyldig ISO-format med klokkeslett
-        let releasedAtIso = "";
-        if (newReleasedAt) {
-          // Hvis input er fra type="datetime-local", er formatet "YYYY-MM-DDTHH:MM"
-          // Konverter til "YYYY-MM-DD HH:MM:SS" for MSSQL
-          if (newReleasedAt.length === 16 && newReleasedAt.includes("T")) {
-            releasedAtIso = newReleasedAt.replace("T", " ") + ":00";
-          } else {
-            releasedAtIso = newReleasedAt;
+          e.preventDefault();
+          setErrorMsg("");
+          let releasedAtIso = "";
+          if (newReleasedAt) {
+            if (newReleasedAt.length === 16 && newReleasedAt.includes("T")) {
+              releasedAtIso = newReleasedAt.replace("T", " ") + ":00";
+            } else {
+              releasedAtIso = newReleasedAt;
+            }
           }
-        }
-        const payload = {
-          app_id: Number(appId),
-          label: nextVersion,
-          code: nextVersion, // eller generer annen unik kode
-          title: newTitle,
-          description: newDescription,
-          released_at: releasedAtIso,
-          sort_index: statuses.length + 1,
-          terminal: newTerminal
-        };
-        try {
-          const result = await addStatus(payload).unwrap();
-          setNewType("MINOR");
-          setNewTerminal(false);
-          setNewTitle("");
-          setNewDescription("");
-          setNewReleasedAt("");
-          // Naviger automatisk til features for denne versjonen
-          if (result?.id) {
-            navigate(`/app/${appId}/features?status_id=${result.id}`);
+          const payload = {
+            app_id: Number(appId),
+            label: nextVersion,
+            code: nextVersion,
+            title: newTitle,
+            description: newDescription,
+            released_at: releasedAtIso,
+            sort_index: statuses.length + 1,
+            terminal: newTerminal
+          };
+          try {
+            const result = await addStatus(payload).unwrap();
+            setNewType("MINOR");
+            setNewTerminal(false);
+            setNewTitle("");
+            setNewDescription("");
+            setNewReleasedAt("");
+            if (result?.id) {
+              navigate(`/app/${appId}/features?status_id=${result.id}`);
+            }
+          } catch (err) {
+            setErrorMsg(t("versionadmin.createerror"));
           }
-        } catch (err) {
-          setErrorMsg(t("versionadmin.createerror"));
-        }
-      }} style={{ marginTop: "2rem" }}>
-        {errorMsg && <Alert severity="danger">{errorMsg}</Alert>}
-        <label style={{ marginRight: 8 }}>
-          {t("versionadmin.type")}
-          <select value={newType} onChange={e => setNewType(e.target.value)} style={{ marginLeft: 8 }}>
+        }} style={{ marginTop: "2rem" }}>
+          {errorMsg && <Alert severity="danger">{errorMsg}</Alert>}
+          <Select label={t("versionadmin.type")}
+            value={newType}
+            onChange={e => setNewType(e.target.value)}
+            style={{ marginLeft: 8, width: 140 }}
+          >
             <option value="MAJOR">{t("versionadmin.major")}</option>
             <option value="MINOR">{t("versionadmin.minor")}</option>
             <option value="PATCH">{t("versionadmin.patch")}</option>
-          </select>
-        </label>
-        <Textfield label={t("versionadmin.nextversion")} value={nextVersion} readOnly style={{ width: 120, marginLeft: 8 }} />
-        <Textfield label={t("versionadmin.title")}
-          value={newTitle}
-          onChange={e => setNewTitle(e.target.value)}
-          required
-          style={{ marginLeft: 8, width: 180 }}
-        />
-        <Textfield label={t("versionadmin.description")}
-          value={newDescription}
-          onChange={e => setNewDescription(e.target.value)}
-          multiline
-          required
-          style={{ marginLeft: 8, width: 240 }}
-        />
-        <Textfield label={t("versionadmin.releasedate")}
-          type="datetime-local"
-          value={newReleasedAt}
-          onChange={e => setNewReleasedAt(e.target.value)}
-          required
-          style={{ marginLeft: 8, width: 200 }}
-        />
-        <label style={{ marginLeft: 8 }}>
-          <input type="checkbox" checked={newTerminal} onChange={e => setNewTerminal(e.target.checked)} /> {t("versionadmin.terminal")}
-        </label>
-        <Button type="submit" style={{ marginLeft: 8 }}>{t("versionadmin.create")}</Button>
+          </Select>
+          <Textfield label={t("versionadmin.nextversion")} value={nextVersion} readOnly style={{ width: 120, marginLeft: 8 }} />
+          <Textfield label={t("versionadmin.title")}
+            value={newTitle}
+            onChange={e => setNewTitle(e.target.value)}
+            required
+            style={{ marginLeft: 8, width: 180 }}
+          />
+          <Textfield label={t("versionadmin.description")}
+            value={newDescription}
+            onChange={e => setNewDescription(e.target.value)}
+            multiline
+            required
+            style={{ marginLeft: 8, width: 240 }}
+          />
+          <Textfield label={t("versionadmin.releasedate")}
+            type="datetime-local"
+            value={newReleasedAt}
+            onChange={e => setNewReleasedAt(e.target.value)}
+            required
+            style={{ marginLeft: 8, width: 200 }}
+          />
+          <Checkbox
+            checked={newTerminal}
+            onChange={e => setNewTerminal(e.target.checked)}
+            label={t("versionadmin.terminal")}
+            style={{ marginLeft: 8 }}
+          />
+          <Button type="submit" icon={<PlusIcon color="#007b5a" title="Legg til" />} style={{ marginLeft: 8 }}>{t("versionadmin.create")}</Button>
         </form>
       </div>
-      <div className="version-card">
-        <div className="version-card-inner">
+      <Card shadow style={{ marginTop: "2rem", background: "var(--ds-color-surface-subtle)" }}>
+        <div className="version-card-inner" style={{ padding: "1.5rem" }}>
           <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>{t("versionadmin.listtitle")}</h4>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {statuses?.map((status) => (
@@ -134,14 +135,15 @@ export default function VersionAdmin({ appId }) {
                   <span style={{ marginLeft: 8, fontSize: "0.97em", color: "#666" }}>{status.title}</span>
                 </span>
                 <span>
-                  <Button size="xsmall" variant="tertiary" onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.featuresbtn")}</Button>
-                  <Button size="xsmall" variant="danger" onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>{t("versionadmin.deletebtn")}</Button>
+                  <Button size="xsmall" variant="tertiary" icon={<InformationIcon color="#0056b4" title="Funksjoner" />} onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.featuresbtn")}</Button>
+                  <Button size="xsmall" variant="secondary" icon={<PencilIcon color="#ff9100" title="Rediger" />} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.editbtn")}</Button>
+                  <Button size="xsmall" variant="danger" icon={<TrashIcon color="#e02e2e" title="Slett" />} onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>{t("versionadmin.deletebtn")}</Button>
                 </span>
               </li>
             ))}
           </ul>
         </div>
-      </div>
-    </div>
+      </Card>
+    </Card>
   );
 }

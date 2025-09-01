@@ -82,10 +82,6 @@
   "userrequests.category.undefined": "Undefined",
   "userrequests.submit": "Submit",
   "userrequests.status.to_review": "To review",
-  "userrequests.category.bug": "Bug",
-  "userrequests.category.undefined": "Undefined",
-  "userrequests.submit": "Submit",
-  "userrequests.status.to_review": "To review",
   "newappform.error": "Could not create app.",
   "frontpage.title": "Roadmap",
   "frontpage.description": "View status and feature requests for all apps. Select an app to see details and contribute new ideas!",
@@ -115,6 +111,37 @@
   "Kunne ikke opprette funksjon. Sjekk at alle felter er fylt ut og gyldige.": "Could not create feature. Check that all fields are filled and valid."
   ,
   "roadmap.loading": "Loading roadmap...",
+    "userrequests": {
+      "createerror": "Could not create suggestion. Check fields and try again.",
+      "newtitle": "New suggestion",
+      "created": "Suggestion created!",
+      "titleField": "Title",
+      "descriptionField": "Description",
+      "categoryField": "Category",
+      "selectCategory": "Select category",
+      "category": {
+        "feature": "Feature",
+        "improvement": "Improvement",
+        "other": "Other"
+      },
+      "loading": "Loading suggestions...",
+      "loaderror": "Could not load suggestions.",
+      "empty": "No suggestions yet.",
+      "vote": "Vote",
+      "votes": "Votes",
+      "convert": "Convert to feature",
+      "statusField": "Status",
+      "adminTitle": "User Requests Admin",
+      "title": "User Requests",
+      "subtitle": "Suggest new features or improvements and vote on others.",
+      "makeSuggestion": "Make a suggestion",
+      "search": "Search",
+      "searchPlaceholder": "Search suggestions...",
+      "cancel": "Cancel"
+    },
+    "versionadmin": {
+      "editbtn": "Edit version"
+    },
     "roadmaphierarchy.loadingSubfeatures": "Loading sub-features...",
     "roadmaphierarchy.loadSubfeaturesError": "Could not load sub-features",
     "roadmaphierarchy.createSubfeature": "Create",

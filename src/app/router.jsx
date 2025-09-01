@@ -7,6 +7,7 @@ import AppAdminPage from "../pages/AppAdminPage";
 import AppFeaturesPage from "../pages/AppFeaturesPage";
 
 import UserRequestsPageV2 from "../pages/UserRequestsPageV2";
+import UserRequestDetailPage from "../pages/UserRequestDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/app/:appId/user-requests-v2",
     element: <UserRequestsPageV2 />,
+  },
+  {
+    path: "/app/:appId/user-requests/:requestId",
+    element: <UserRequestDetailPage />,
   },
 ]);
 

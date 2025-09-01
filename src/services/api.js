@@ -32,7 +32,11 @@ export const api = createApi({
       providesTags: ["UserRequestComment"],
     }),
     addUserRequestComment: builder.mutation({
-      query: ({ request_id, text }) => ({ url: `/user-requests/${request_id}/comments`, method: "POST", body: { text } }),
+      query: ({ request_id, author, text }) => ({
+        url: `/user-requests/${request_id}/comments`,
+        method: "POST",
+        body: { author: author || "Anonym", text },
+      }),
       invalidatesTags: ["UserRequestComment"],
     }),
     getApps: builder.query({ query: () => "/apps", providesTags: ["App"] }),

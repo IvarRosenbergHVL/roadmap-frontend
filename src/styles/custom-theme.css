@@ -1,0 +1,2 @@
+/* Importer denne filen i main.jsx for å bruke dine custom design tokens */
+@import "../../design-tokens-build/theme.css";

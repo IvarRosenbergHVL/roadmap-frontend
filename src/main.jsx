@@ -5,6 +5,7 @@ import { store } from "./app/store";
 import AppRouter from "./app/router";
 import "@digdir/designsystemet-css/index.css";
 import "@digdir/designsystemet-theme";
+import "./styles/custom-theme.css";
 import "./app/i18n";
 import "./styles/global-overrides.css";
 import "./styles/global-overrides.css";

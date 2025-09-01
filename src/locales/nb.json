@@ -82,10 +82,6 @@
   "userrequests.category.undefined": "Udefinert",
   "userrequests.submit": "Send inn",
   "userrequests.status.to_review": "Til vurdering",
-  "userrequests.category.bug": "Feil/mangel",
-  "userrequests.category.undefined": "Udefinert",
-  "userrequests.submit": "Send inn",
-  "userrequests.status.to_review": "Til vurdering",
   "newappform.error": "Kunne ikke opprette app.",
   "frontpage.title": "Roadmap",
   "frontpage.description": "Se status og funksjonsønsker for alle apper. Velg en app for å se detaljer og bidra med nye forslag!",
@@ -115,6 +111,37 @@
   "Kunne ikke opprette funksjon. Sjekk at alle felter er fylt ut og gyldige.": "Kunne ikke opprette funksjon. Sjekk at alle felter er fylt ut og gyldige."
   ,
   "roadmap.loading": "Laster roadmap...",
+    "userrequests": {
+      "createerror": "Kunne ikke opprette forslag. Sjekk feltene og prøv igjen.",
+      "newtitle": "Nytt forslag",
+      "created": "Forslag opprettet!",
+      "titleField": "Tittel",
+      "descriptionField": "Beskrivelse",
+      "categoryField": "Kategori",
+      "selectCategory": "Velg kategori",
+      "category": {
+        "feature": "Funksjon",
+        "improvement": "Forbedring",
+        "other": "Annet"
+      },
+      "loading": "Laster forslag...",
+      "loaderror": "Kunne ikke laste forslag.",
+      "empty": "Ingen forslag ennå.",
+      "vote": "Stem",
+      "votes": "Stemmer",
+      "convert": "Konverter til funksjon",
+      "statusField": "Status",
+      "adminTitle": "Brukerforslag admin",
+      "title": "Brukerforslag",
+      "subtitle": "Foreslå nye funksjoner eller forbedringer og stem på andres.",
+      "makeSuggestion": "Legg inn forslag",
+      "search": "Søk",
+      "searchPlaceholder": "Søk i forslag...",
+      "cancel": "Avbryt"
+    },
+    "versionadmin": {
+      "editbtn": "Rediger versjon"
+    },
     "roadmaphierarchy.loadingSubfeatures": "Laster sub-features...",
     "roadmaphierarchy.loadSubfeaturesError": "Kunne ikke laste sub-features",
     "roadmaphierarchy.createSubfeature": "Opprett",
