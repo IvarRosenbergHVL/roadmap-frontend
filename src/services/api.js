@@ -1,4 +1,4 @@
-    import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   reducerPath: "api",
@@ -14,6 +14,35 @@ export const api = createApi({
       query: (body) => ({ url: "/user-requests", method: "POST", body }),
       invalidatesTags: ["UserRequest"],
     }),
+      // Edit Comment
+      updateComment: builder.mutation({
+        query: ({ id, text }) => ({
+          url: `/comments/${id}`,
+          method: "PATCH",
+          body: { text },
+        }),
+        invalidatesTags: ["Comment"],
+      }),
+
+      // Remove Vote
+      deleteVote: builder.mutation({
+        query: ({ feature_id, user_sub, fingerprint }) => ({
+          url: `/votes`,
+          method: "DELETE",
+          body: { feature_id, user_sub, fingerprint },
+        }),
+        invalidatesTags: ["Vote", "Feature"],
+      }),
+
+      // Promote Feature
+      promoteFeature: builder.mutation({
+        query: ({ id, app_id, status_id }) => ({
+          url: `/features/${id}/promote`,
+          method: "POST",
+          body: { app_id, status_id },
+        }),
+        invalidatesTags: ["Feature"],
+      }),
     voteUserRequest: builder.mutation({
       query: (id) => ({ url: `/user-requests/${id}/vote`, method: "POST" }),
       invalidatesTags: ["UserRequest"],
@@ -108,6 +137,9 @@ export const {
   useDeleteFeatureMutation,
   useUpdateFeatureMutation,
   usePromoteFeatureRequestMutation,
+  useUpdateCommentMutation,
+  useDeleteVoteMutation,
+  usePromoteFeatureMutation,
   useGetBackendVersionQuery,
   useGetUserRequestCommentsQuery,
   useAddUserRequestCommentMutation,

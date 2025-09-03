@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useGetStatusesQuery, useAddStatusMutation, useUpdateStatusMutation, useDeleteStatusMutation } from "../services/api";
 import { Spinner, Alert, Button, Textfield, Tag, Select, Checkbox, Card } from "@digdir/designsystemet-react";
-import { TrashIcon, InformationIcon, PlusIcon, PencilIcon } from "@navikt/aksel-icons";
+import {
+  PlusIcon,
+  TrashIcon,
+  PencilIcon,
+  ChatIcon
+} from "@navikt/aksel-icons";
 
 export default function VersionAdmin({ appId }) {
   const { t } = useTranslation();
@@ -46,7 +51,7 @@ export default function VersionAdmin({ appId }) {
   if (isError) return <Alert severity="danger">{t("versionadmin.loaderror")}</Alert>;
 
   return (
-    <Card shadow style={{ padding: "2rem", marginBottom: "2rem" }}>
+  <Card style={{ padding: "2rem", marginBottom: "2rem" }}>
       <div className="version-form">
         <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "1.2rem", color: "#222" }}>{t("versionadmin.newversion")}</h3>
         <form onSubmit={async e => {
@@ -121,10 +126,17 @@ export default function VersionAdmin({ appId }) {
             label={t("versionadmin.terminal")}
             style={{ marginLeft: 8 }}
           />
-          <Button type="submit" icon={<PlusIcon color="#007b5a" title="Legg til" />} style={{ marginLeft: 8 }}>{t("versionadmin.create")}</Button>
+          <Button
+            variant="primary"
+            icon={<PlusIcon aria-hidden />}
+            type="submit"
+            style={{ marginLeft: 8, minWidth: 130 }}
+          >
+            {t("versionadmin.create")}
+          </Button>
         </form>
       </div>
-      <Card shadow style={{ marginTop: "2rem", background: "var(--ds-color-surface-subtle)" }}>
+  <Card style={{ marginTop: "2rem", background: "var(--ds-color-surface-subtle)" }}>
         <div className="version-card-inner" style={{ padding: "1.5rem" }}>
           <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>{t("versionadmin.listtitle")}</h4>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -134,10 +146,30 @@ export default function VersionAdmin({ appId }) {
                   <Tag variant={status.terminal ? "success" : "info"} style={{ fontSize: "0.95em", padding: "0.2em 0.7em" }}>{status.label}</Tag>
                   <span style={{ marginLeft: 8, fontSize: "0.97em", color: "#666" }}>{status.title}</span>
                 </span>
-                <span>
-                  <Button size="xsmall" variant="tertiary" icon={<InformationIcon color="#0056b4" title="Funksjoner" />} onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.featuresbtn")}</Button>
-                  <Button size="xsmall" variant="secondary" icon={<PencilIcon color="#ff9100" title="Rediger" />} style={{ marginRight: 4, fontSize: "0.97em" }}>{t("versionadmin.editbtn")}</Button>
-                  <Button size="xsmall" variant="danger" icon={<TrashIcon color="#e02e2e" title="Slett" />} onClick={() => deleteStatus(status.id)} style={{ fontSize: "0.97em" }}>{t("versionadmin.deletebtn")}</Button>
+                <span style={{ display: "flex", gap: "12px" }}>
+                  <Button
+                    variant="tertiary"
+                    icon={<ChatIcon aria-hidden />}
+                    style={{ minWidth: 130, fontSize: "0.97em" }}
+                    onClick={() => navigate(`/app/${appId}/features?status_id=${status.id}`)}
+                  >
+                    {t("versionadmin.featuresbtn")}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    icon={<PencilIcon aria-hidden />}
+                    style={{ minWidth: 130, fontSize: "0.97em" }}
+                  >
+                    {t("versionadmin.editbtn")}
+                  </Button>
+                  <Button
+                    variant="danger"
+                    icon={<TrashIcon aria-hidden />}
+                    style={{ minWidth: 130, fontSize: "0.97em" }}
+                    onClick={() => deleteStatus(status.id)}
+                  >
+                    {t("versionadmin.deletebtn")}
+                  </Button>
                 </span>
               </li>
             ))}
