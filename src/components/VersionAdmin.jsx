@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NewFeatureForm from "./NewFeatureForm";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -24,6 +25,10 @@ export default function VersionAdmin({ appId }) {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newReleasedAt, setNewReleasedAt] = useState("");
+
+  // Modal state for adding feature to version
+  const [showFeatureModal, setShowFeatureModal] = useState(false);
+  const [featureStatusId, setFeatureStatusId] = useState(null);
 
   // Finn siste versjon
   const lastVersion = statuses && statuses.length > 0
@@ -139,6 +144,12 @@ export default function VersionAdmin({ appId }) {
   <Card style={{ marginTop: "2rem", background: "var(--ds-color-surface-subtle)" }}>
         <div className="version-card-inner" style={{ padding: "1.5rem" }}>
           <h4 style={{ marginTop: 0, fontSize: "1.05rem", fontWeight: 600, color: "#222", marginBottom: "1.1rem" }}>{t("versionadmin.listtitle")}</h4>
+          <div style={{ marginBottom: 12 }}>
+            <strong>{t("versionadmin.addfeaturetitle")}</strong>
+            <div style={{ fontSize: "0.97em", color: "#444", marginTop: 2, marginBottom: 8 }}>
+              {t("versionadmin.addfeaturedesc")}
+            </div>
+          </div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {statuses?.map((status) => (
               <li key={status.id} style={{ marginBottom: "0.7rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -147,6 +158,14 @@ export default function VersionAdmin({ appId }) {
                   <span style={{ marginLeft: 8, fontSize: "0.97em", color: "#666" }}>{status.title}</span>
                 </span>
                 <span style={{ display: "flex", gap: "12px" }}>
+                  <Button
+                    variant="primary"
+                    icon={<PlusIcon aria-hidden />}
+                    style={{ minWidth: 130, fontSize: "0.97em" }}
+                    onClick={() => { setFeatureStatusId(status.id); setShowFeatureModal(true); }}
+                  >
+                    {t("versionadmin.addfeaturebtn")}
+                  </Button>
                   <Button
                     variant="tertiary"
                     icon={<ChatIcon aria-hidden />}
@@ -174,6 +193,22 @@ export default function VersionAdmin({ appId }) {
               </li>
             ))}
           </ul>
+          {/* Modal for NewFeatureForm */}
+          {showFeatureModal && (
+            <div style={{
+              position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.25)", zIndex: 1000,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}>
+              <div style={{ background: "#fff", padding: 32, borderRadius: 8, minWidth: 400, boxShadow: "0 2px 16px rgba(0,0,0,0.15)" }}>
+                <NewFeatureForm
+                  appId={appId}
+                  propStatusId={featureStatusId}
+                  onSaved={() => { setShowFeatureModal(false); setFeatureStatusId(null); }}
+                  onCancel={() => { setShowFeatureModal(false); setFeatureStatusId(null); }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </Card>
     </Card>
